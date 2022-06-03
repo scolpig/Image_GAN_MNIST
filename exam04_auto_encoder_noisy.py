@@ -1,20 +1,13 @@
-# import os
-# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # CPU를 쓰도록 강제
-
-# import tensorflow as tf
-# if __name__ == "__main__":
-#     #check with tensorflow
-#     print(tf.__version__)
-#     print("gpu_device_name =>"+ tf.test.gpu_device_name())
-#     print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-
-
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # CPU를 쓰도록 강제
 
 import matplotlib.pyplot as plt
 import numpy as np
+
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import *
 from tensorflow.keras.datasets import mnist
+
 
 input_img = Input(shape=(28, 28 ,1))
 x = Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
@@ -46,12 +39,26 @@ conv_x_test = x_test.reshape(-1, 28, 28, 1)
 print(conv_x_train.shape)
 print(conv_x_test.shape)
 
-fit_hist = autoencoder.fit(conv_x_train, conv_x_train,
-                   epochs=50, batch_size=128,
+noise_facter = 0.5
+x_train_noisy = conv_x_train + noise_facter * np.random.normal(
+    loc=0.0, scale=1.0, size=conv_x_train.shape)
+x_test_noisy = conv_x_test + noise_facter * np.random.normal(
+    loc=0.0, scale=1.0, size=conv_x_test.shape)
+n = 10
+plt.figure(figsize=(20,4))
+for i in range(n):
+    ax = plt.subplot(1, 10, i+1)
+    plt.imshow(x_test_noisy[i])
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+plt.show()
+
+fit_hist = autoencoder.fit(x_train_noisy, conv_x_train,
+                   epochs=100, batch_size=128,
                    validation_data=(conv_x_test, conv_x_test))
 
 
-decoded_img = autoencoder.predict(conv_x_test[:10])
+decoded_img = autoencoder.predict(x_test_noisy[:10])
 
 n = 10
 plt.figure(figsize=(20,4))
