@@ -48,14 +48,14 @@ n = 10
 plt.figure(figsize=(20,4))
 for i in range(n):
     ax = plt.subplot(1, 10, i+1)
-    plt.imshow(x_test_noisy[i])
+    plt.imshow(x_test_noisy[i].reshape(28, 28))
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 plt.show()
 
 fit_hist = autoencoder.fit(x_train_noisy, conv_x_train,
                    epochs=100, batch_size=128,
-                   validation_data=(conv_x_test, conv_x_test))
+                   validation_data=(x_test_noisy, conv_x_test))
 
 
 decoded_img = autoencoder.predict(x_test_noisy[:10])
@@ -64,7 +64,7 @@ n = 10
 plt.figure(figsize=(20,4))
 for i in range(n):
     ax = plt.subplot(2, 10, i+1)
-    plt.imshow(x_test[i])
+    plt.imshow(x_test_noisy[i].reshape(28, 28))
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
 
