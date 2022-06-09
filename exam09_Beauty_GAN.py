@@ -1,4 +1,4 @@
-import dlib
+import dlib # conda install -c conda-forge dlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import tensorflow.compat.v1 as tf
